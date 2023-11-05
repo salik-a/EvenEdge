@@ -24,7 +24,7 @@ const Header: React.FC<IHeader> = ({
     } else {
       return null;
     }
-  }, []);
+  }, [centerComponent]);
 
   const renderRightIcon = useCallback(() => {
     if (React.isValidElement(rightIcon)) {
@@ -50,7 +50,7 @@ const Header: React.FC<IHeader> = ({
           </TouchableOpacity>
         )}
       </View>
-      {renderCenterContent()}
+      <View style={styles.centerComponent}>{renderCenterContent()}</View>
     </View>
   );
 };
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     backgroundColor: '#00000015',
+    marginBottom: 20,
   },
   titleContainer: {
     width: '100%',
@@ -73,7 +74,11 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 24,
+    color: 'black',
+  },
+  centerComponent: {
+    marginTop: 10,
   },
 });
 
