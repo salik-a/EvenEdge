@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './Home.style';
 import Header from '../../components/Header';
@@ -74,7 +81,7 @@ const Home: React.FC = () => {
   }, [values, setValues]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header
         title={'Bored AI'}
         rightIcon={
@@ -174,7 +181,7 @@ const Home: React.FC = () => {
         onPress={handleFindActivity}>
         Find Activity
       </Button>
-    </View>
+    </SafeAreaView>
   );
 };
 

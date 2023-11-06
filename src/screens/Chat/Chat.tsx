@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import styles from './Chat.style';
 import Header from '../../components/Header';
 import axios from 'axios';
@@ -60,7 +60,7 @@ const Chat: React.FC = ({ route }) => {
     }, []),
   );
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header
         title={'Bored AI'}
         rightIcon={
@@ -82,7 +82,7 @@ const Chat: React.FC = ({ route }) => {
           {gptMessage === '' ? 'Thinking...' : gptMessage}
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

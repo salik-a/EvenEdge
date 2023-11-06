@@ -3,7 +3,7 @@ import {
   FlatList,
   Image,
   Keyboard,
-  ScrollView,
+  SafeAreaView,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -105,7 +105,7 @@ const Search: React.FC = () => {
   }, [value, setValue, isFocused, setIsFocused]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header
         title={'Bored AI'}
         rightIcon={
@@ -129,7 +129,7 @@ const Search: React.FC = () => {
           />
         </View>
       </TouchableWithoutFeedback>
-    </View>
+    </SafeAreaView>
   );
 };
 

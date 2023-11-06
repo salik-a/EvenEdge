@@ -7,6 +7,7 @@ import {
   View,
   TouchableWithoutFeedback,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import styles from './History.style';
 import Header from '../../components/Header';
@@ -128,7 +129,7 @@ const History: React.FC = () => {
     );
   }, [value, setValue, isFocused, setIsFocused]);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header
         title={'Bored AI'}
         rightIcon={
@@ -182,7 +183,7 @@ const History: React.FC = () => {
           </View>
         </Modal>
       </Portal>
-    </View>
+    </SafeAreaView>
   );
 };
 
