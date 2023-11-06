@@ -1,6 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 interface IHeader {
   title: string;
@@ -35,12 +43,16 @@ const Header: React.FC<IHeader> = ({
   }, []);
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={'#00000015'} />
       <View style={styles.titleContainer}>
         <View style={styles.title}>
           {showGoBack && (
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text>Back</Text>
-            </TouchableOpacity>
+            <Entypo
+              style={styles.backIcon}
+              name="chevron-thin-left"
+              size={26}
+              onPress={() => navigation.goBack()}
+            />
           )}
           <Text style={styles.titleText}>{title}</Text>
         </View>
@@ -71,6 +83,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   titleText: {
     fontWeight: 'bold',
@@ -79,6 +92,9 @@ const styles = StyleSheet.create({
   },
   centerComponent: {
     marginTop: 10,
+  },
+  backIcon: {
+    marginRight: 10,
   },
 });
 
