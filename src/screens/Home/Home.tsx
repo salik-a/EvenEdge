@@ -3,7 +3,7 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './Home.style';
 import Header from '../../components/Header';
-import activities from '../../utils/activities.json';
+import activities from '../../utils/activityTypes.json';
 import Slider from '@react-native-community/slider';
 import { Button } from 'react-native-paper';
 import getData from '../../services/getData';
@@ -92,7 +92,9 @@ const Home: React.FC = () => {
           participants={data.participants}
           price={data.price}
           onPress={() =>
-            navigation.navigate('Chat', { message: data.activity })
+            navigation.navigate('Chat', {
+              item: { ...data, sendRequest: true },
+            })
           }
         />
       ) : (
