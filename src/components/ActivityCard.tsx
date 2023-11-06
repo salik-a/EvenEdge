@@ -1,6 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -10,6 +17,7 @@ interface IActivityCard {
   participants: number;
   price: number;
   onPress: () => void;
+  containerStyle?: ViewStyle;
 }
 
 const ActivityCard: React.FC<IActivityCard> = ({
@@ -18,10 +26,13 @@ const ActivityCard: React.FC<IActivityCard> = ({
   participants,
   price,
   onPress,
+  containerStyle,
 }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Ionicons name="search" size={26} />
+    <TouchableOpacity
+      style={[styles.container, containerStyle]}
+      onPress={onPress}>
+      <Ionicons name="checkmark-done-circle-sharp" size={26} />
       <View>
         <Text style={styles.activityText}>{activity}</Text>
         <Text style={styles.bottomText}>
