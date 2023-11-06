@@ -1,43 +1,108 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  View,
+  TouchableWithoutFeedback,
+  FlatList,
+} from 'react-native';
 import styles from './History.style';
 import Header from '../../components/Header';
 import { TextInput, Portal, Modal, Button } from 'react-native-paper';
+import ActivityCard from '../../components/ActivityCard';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { storage } from '../../services/storage';
+
+type TActivity = {
+  activity: string;
+  type: string;
+  participants: number;
+  price: number;
+  link: string;
+  key: string;
+  accessibility: number;
+};
 
 const History: React.FC = () => {
-  const [data, setData] = useState<string>('');
+  const [value, setValue] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const inputRef = useRef(null);
-
   const [visible, setVisible] = React.useState(false);
+  const [activityList, setActivityList] = useState<TActivity[]>([]);
+
+  const inputRef = useRef(null);
+  const navigation = useNavigation();
+
+  const list = storage.getString('activitiesArray');
+  const activitiesArray = list ? JSON.parse(list) : [];
+
+  useFocusEffect(
+    useCallback(() => {
+      setActivityList(activitiesArray);
+    }, []),
+  );
 
   const showModal = useCallback(() => setVisible(true), []);
   const hideModal = useCallback(() => setVisible(false), []);
 
   const handleDelete = useCallback(() => {
+    storage.clearAll();
+    setActivityList([]);
     hideModal();
   }, [hideModal]);
 
-  const HeaderCenter = useCallback(() => {
+  const handleChangeText = useCallback((text: string) => {
+    setValue(text);
+    function startsWithActivity(activity: string, searchString: string) {
+      return activity.startsWith(searchString);
+    }
+    const filteredActivities = activitiesArray.filter((activity) =>
+      startsWithActivity(activity.activity.toLowerCase(), text.toLowerCase()),
+    );
+    setActivityList(filteredActivities);
+  }, []);
+
+  const handleClosePress = useCallback(() => {
+    inputRef.current.blur();
+    setIsFocused(false);
+    setValue('');
+    setActivityList(activitiesArray);
+  }, [activitiesArray]);
+
+  const renderItem = useCallback(
+    ({ item, index }: { item: TActivity; index: number }) => {
+      return (
+        <ActivityCard
+          activity={item.activity}
+          type={item.type}
+          participants={item.participants}
+          price={item.price}
+          onPress={() =>
+            navigation.navigate('Chat', {
+              item: { ...item, sendRequest: false },
+            })
+          }
+          containerStyle={{ marginVertical: 5, borderWidth: 0.2 }}
+        />
+      );
+    },
+    [],
+  );
+
+  const renderHeaderCenter = useCallback(() => {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TextInput
           ref={inputRef}
           placeholder="Search"
           mode="outlined"
-          value={data}
-          onChangeText={(text) => setData(text)}
+          value={value}
+          onChangeText={handleChangeText}
           left={<TextInput.Icon icon="text-search" />}
           right={
-            data !== '' ? (
-              <TextInput.Icon
-                onPress={() => {
-                  inputRef.current.blur();
-                  setIsFocused(false);
-                  setData('');
-                }}
-                icon="close-circle"
-              />
+            value !== '' ? (
+              <TextInput.Icon onPress={handleClosePress} icon="close-circle" />
             ) : null
           }
           onFocus={() => setIsFocused(true)}
@@ -52,13 +117,13 @@ const History: React.FC = () => {
           activeOutlineColor="black"
         />
         {isFocused && (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={Keyboard.dismiss}>
             <Text style={styles.headerCancel}>Cancel</Text>
           </TouchableOpacity>
         )}
       </View>
     );
-  }, [data, setData, isFocused, setIsFocused]);
+  }, [value, setValue, isFocused, setIsFocused]);
   return (
     <View style={styles.container}>
       <Header
@@ -70,9 +135,18 @@ const History: React.FC = () => {
           />
         }
         rightIconPress={showModal}
-        centerComponent={<HeaderCenter />}
+        centerComponent={renderHeaderCenter()}
       />
-      <Text>History Screen</Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={true}>
+        <View style={styles.innerContainer}>
+          <FlatList
+            data={activityList}
+            renderItem={renderItem}
+            keyExtractor={(item: TActivity) => item.key}
+            onScroll={Keyboard.dismiss}
+          />
+        </View>
+      </TouchableWithoutFeedback>
       <Portal>
         <Modal
           visible={visible}
