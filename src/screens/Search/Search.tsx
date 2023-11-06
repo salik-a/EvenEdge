@@ -69,7 +69,7 @@ const Search: React.FC = () => {
     },
     [],
   );
-  const HeaderCenter = useCallback(() => {
+  const renderCenterHeader = useCallback(() => {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TextInput
@@ -96,7 +96,7 @@ const Search: React.FC = () => {
           activeOutlineColor="black"
         />
         {isFocused && (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={Keyboard.dismiss}>
             <Text style={{ fontSize: 18, marginLeft: 4 }}>Cancel</Text>
           </TouchableOpacity>
         )}
@@ -117,7 +117,7 @@ const Search: React.FC = () => {
             source={require('../../assets/icAvatar.png')}
           />
         }
-        centerComponent={<HeaderCenter />}
+        centerComponent={renderCenterHeader()}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={true}>
         <View style={styles.innerContainer}>
