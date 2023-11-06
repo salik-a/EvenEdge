@@ -53,14 +53,12 @@ const Home: React.FC = () => {
                   return { ...exData, type: title };
                 })
               }
-              style={{
-                borderWidth: 1,
-                borderRadius: 15,
-                paddingVertical: 5,
-                paddingHorizontal: 8,
-                marginHorizontal: 4,
-                backgroundColor: values.type === title ? 'black' : '#fff15',
-              }}>
+              style={[
+                styles.activityContainer,
+                {
+                  backgroundColor: values.type === title ? 'black' : '#fff15',
+                },
+              ]}>
               <Text
                 style={{
                   color: values.type === title ? 'white' : 'black',
@@ -81,10 +79,7 @@ const Home: React.FC = () => {
         title={'Bored AI'}
         rightIcon={
           <Image
-            style={{
-              width: 25,
-              height: 25,
-            }}
+            style={styles.headerImage}
             source={require('../../assets/icAvatar.png')}
           />
         }
@@ -96,26 +91,18 @@ const Home: React.FC = () => {
           type={data.type}
           participants={data.participants}
           price={data.price}
-          onPress={() => navigation.navigate('Chat')}
+          onPress={() =>
+            navigation.navigate('Chat', { message: data.activity })
+          }
         />
       ) : (
-        <View
-          style={{
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            flexDirection: 'row',
-            alignSelf: 'center',
-            borderWidth: 1,
-            borderRadius: 10,
-            width: '90%',
-            height: 75,
-          }}>
+        <View style={styles.topContainer}>
           <Ionicons name={loading ? 'reload' : 'search'} size={26} />
           <View>
-            <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>
+            <Text style={styles.topText}>
               {loading ? 'Loading ...' : 'Stop Being Bored!'}
             </Text>
-            <Text style={{ color: 'black', fontSize: 14 }}>
+            <Text style={styles.bottomText}>
               {loading
                 ? 'Searching for activities'
                 : 'Configure parameters to find activities.'}
@@ -123,13 +110,11 @@ const Home: React.FC = () => {
           </View>
         </View>
       )}
-      <View style={{ alignItems: 'center', width: '100%', marginTop: 20 }}>
-        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>
-          Price
-        </Text>
+      <View style={styles.slidersContainer}>
+        <Text style={styles.topText}>Price</Text>
         <Text>{Number(values.price).toFixed(1)}</Text>
         <Slider
-          style={{ width: '92%', height: 40 }}
+          style={styles.sliderStyle}
           minimumValue={0}
           maximumValue={1}
           // minimumTrackTintColor="#000000"
@@ -141,12 +126,10 @@ const Home: React.FC = () => {
           }
           value={values.price}
         />
-        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>
-          Participants
-        </Text>
+        <Text style={styles.topText}>Participants</Text>
         <Text>{Number(values.participants).toFixed(0)}</Text>
         <Slider
-          style={{ width: '92%', height: 40 }}
+          style={styles.sliderStyle}
           minimumValue={0}
           maximumValue={10}
           // minimumTrackTintColor="#000000"
@@ -158,12 +141,10 @@ const Home: React.FC = () => {
           }
           value={values.participants}
         />
-        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}>
-          Accessibility
-        </Text>
+        <Text style={styles.topText}>Accessibility</Text>
         <Text>{Number(values.accessibility).toFixed(1)}</Text>
         <Slider
-          style={{ width: '92%', height: 40 }}
+          style={styles.sliderStyle}
           minimumValue={0}
           maximumValue={1}
           // minimumTrackTintColor="#000000"
@@ -179,27 +160,14 @@ const Home: React.FC = () => {
       <Button
         icon="sync"
         mode="outlined"
-        style={{
-          width: '80%',
-          alignSelf: 'center',
-          borderColor: 'black',
-          borderRadius: 6,
-          marginTop: 20,
-        }}
+        style={styles.randomizeButton}
         textColor="black"
         onPress={handleRandomize}>
         Randomize Values
       </Button>
       <Button
         mode="contained"
-        style={{
-          width: '80%',
-          alignSelf: 'center',
-          borderColor: 'black',
-          borderRadius: 6,
-          backgroundColor: 'black',
-          marginTop: 12,
-        }}
+        style={styles.findButton}
         textColor="white"
         onPress={handleFindActivity}>
         Find Activity
