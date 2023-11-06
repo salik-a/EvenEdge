@@ -6,10 +6,13 @@ import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import { apiKey } from '../../utils/constants';
 import { storage } from '../../services/storage';
+import { addToHistoryList } from '../../store/historyListSlice';
+import { useDispatch } from 'react-redux';
 
 const Chat: React.FC = ({ route }) => {
   const item = useMemo(() => route.params.item, [route]);
   const [gptMessage, setGptMessage] = useState('');
+  const dispatch = useDispatch();
 
   const handleSubmit = async () => {
     const client = axios.create({
@@ -37,6 +40,13 @@ const Chat: React.FC = ({ route }) => {
           { ...item, gptMessage: res.data.choices[0].text, date: Date.now() },
         ]);
         storage.set('activitiesArray', serializedArray);
+        dispatch(
+          addToHistoryList({
+            ...item,
+            gptMessage: res.data.choices[0].text,
+            date: Date.now(),
+          }),
+        );
       })
       .catch((err) => console.log(err));
   };

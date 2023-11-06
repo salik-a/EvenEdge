@@ -57,6 +57,14 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-around',
   },
+  activityCard: {
+    marginVertical: 5,
+    borderWidth: 0.2,
+  },
+  headerCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
 export default styles;

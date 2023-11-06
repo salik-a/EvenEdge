@@ -14,8 +14,11 @@ import { TextInput, Portal, Modal, Button } from 'react-native-paper';
 import ActivityCard from '../../components/ActivityCard';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { storage } from '../../services/storage';
+import { useAppSelector } from '../../utils/useStore';
+import { deleteAll } from '../../store/historyListSlice';
+import { useDispatch } from 'react-redux';
 
-type TActivity = {
+export type TActivity = {
   activity: string;
   type: string;
   participants: number;
@@ -33,14 +36,13 @@ const History: React.FC = () => {
 
   const inputRef = useRef(null);
   const navigation = useNavigation();
-
-  const list = storage.getString('activitiesArray');
-  const activitiesArray = list ? JSON.parse(list) : [];
+  const dispatch = useDispatch();
+  const historyListData = useAppSelector((item) => item.history.activityArray);
 
   useFocusEffect(
     useCallback(() => {
-      setActivityList(activitiesArray);
-    }, []),
+      setActivityList(historyListData);
+    }, [historyListData]),
   );
 
   const showModal = useCallback(() => setVisible(true), []);
@@ -50,6 +52,7 @@ const History: React.FC = () => {
     storage.clearAll();
     setActivityList([]);
     hideModal();
+    dispatch(deleteAll());
   }, [hideModal]);
 
   const handleChangeText = useCallback((text: string) => {
@@ -57,7 +60,7 @@ const History: React.FC = () => {
     function startsWithActivity(activity: string, searchString: string) {
       return activity.startsWith(searchString);
     }
-    const filteredActivities = activitiesArray.filter((activity) =>
+    const filteredActivities = historyListData.filter((activity) =>
       startsWithActivity(activity.activity.toLowerCase(), text.toLowerCase()),
     );
     setActivityList(filteredActivities);
@@ -67,8 +70,8 @@ const History: React.FC = () => {
     inputRef.current.blur();
     setIsFocused(false);
     setValue('');
-    setActivityList(activitiesArray);
-  }, [activitiesArray]);
+    setActivityList(historyListData);
+  }, [historyListData]);
 
   const renderItem = useCallback(
     ({ item, index }: { item: TActivity; index: number }) => {
@@ -83,7 +86,7 @@ const History: React.FC = () => {
               item: { ...item, sendRequest: false },
             })
           }
-          containerStyle={{ marginVertical: 5, borderWidth: 0.2 }}
+          containerStyle={styles.activityCard}
         />
       );
     },
@@ -92,7 +95,7 @@ const History: React.FC = () => {
 
   const renderHeaderCenter = useCallback(() => {
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={styles.headerCenter}>
         <TextInput
           ref={inputRef}
           placeholder="Search"
