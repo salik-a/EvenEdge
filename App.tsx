@@ -2,14 +2,18 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PaperProvider } from 'react-native-paper';
 import RootNavigation from './src/route'
-function App(): JSX.Element {
+import { Provider } from 'react-redux';
+import store from './src/store';
 
+function App(): JSX.Element {
   return (
-    <SafeAreaProvider>
-      <PaperProvider>
-        <RootNavigation />
-      </PaperProvider>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <PaperProvider>
+          <RootNavigation />
+        </PaperProvider>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 
